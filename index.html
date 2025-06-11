@@ -1104,36 +1104,28 @@
     }
 
     // Prepare product data schema
-       // Prepare product data schema
-   const prodData = {
-       name,
-       description,
-       price,
-       discount,
-       category_id: categoryId,
-       tags: tagIds,
-       images: imageUrls,
-   };
+    const prodData = {
+        name,
+        description,
+        price,
+        discount,
+        category_id: categoryId,
+        tags: tagIds,
+        images: imageUrls,
+    };
 
-   // Prompt admin password securely
-   const adminPassword = prompt("Enter admin password to save product:");
-   if (!adminPassword) return;
+    // Prompt admin password securely
+    const adminPassword = prompt("Enter admin password to save product:");
+    if (!adminPassword) return;
 
-   try {
-       const formData = new FormData();
-       formData.append("password", adminPassword); // Append password to FormData
+    try {
+        const formData = new FormData();
+        formData.append("password", adminPassword); // Append password to FormData
 
-       // Append product data to FormData
-       for (const key in prodData) {
-           if (Array.isArray(prodData[key])) {
-               formData.append(key, JSON.stringify(prodData[key])); // Convert arrays to JSON strings
-           } else {
-               formData.append(key, prodData[key]);
-           }
-       }
-
-       // ... (rest of the code)
-   
+        // Append product data to FormData
+        for (const key in prodData) {
+            formData.append(key, prodData[key]);
+        }
            
    
         if (id) {
