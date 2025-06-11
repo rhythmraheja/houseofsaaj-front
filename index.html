@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>House of Saaj - Handcraft Products</title>
+<style>
+  /* Reset and base styles */
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #fafafa;
+    color: #222;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  a {
+    text-decoration: none;
+    color: #4f46e5;
+  }
+  a:hover, a:focus {
+    text-decoration: underline;
+  }
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    border-radius: 12px;
+    border: none;
+    padding: 0.6rem 1.6rem;
+    background: #4f46e5;
+    color: white;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  button:hover, button:focus-visible {
+    background-color: #4338ca;
+    outline: none;
+  }
+  input, select, textarea {
+    font-family: inherit;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border-radius: 12px;
+    border: 1.5px solid #ddd;
+    transition: border-color 0.3s ease;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: #4f46e5;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.3);
+  }
+  h1, h2, h3, h4 {
+    margin: 1rem 0 0.5rem 0;
+    font-weight: 700;
+  }
+  p {
+    margin: 0 0 1rem 0;
+    color: #475569;
+  }
+  main {
+    flex: 1;
+    max-width: 1200px;
+    margin: 72px auto 120px auto;
+    padding: 0 24px;
+    width: 100%;
+  }
+  header, footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    background: rgba(255,255,255,0.94);
+    backdrop-filter: saturate(180%) blur(8px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    z-index: 2000;
+  }
+  header {
+    top: 0;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+  }
+  header .logo {
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: #4f46e5;
+    user-select: none;
+  }
+  nav {
+    display: flex;
+    gap: 32px;
+  }
+  nav button.link {
+    background: none;
+    color: #4f46e5;
+    padding: 8px 0;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  nav button.link[aria-current="page"] {
+    border-bottom: 3px solid #4f46e5;
+  }
+  nav button.link:focus-visible {
+    outline: 2px solid #818cf8;
+    outline-offset: 2px;
+  }
+  footer {
+    bottom: 0;
+    padding: 48px 24px;
+    font-size: 0.9rem;
+    color: #64748b;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+    gap: 24px;
+  }
+  footer h4 {
+    font-weight: 700;
+    color: #1e293b;
+  }
+  footer a {
+    color: #64748b;
+  }
+  footer a:hover,
+  footer a:focus {
+    color: #4f46e5;
+    text-decoration: underline;
+  }
+  .admin-link {
+    cursor: pointer;
+    font-weight: 600;
+    color: #a78bfa;
+  }
+  .admin-link:hover, .admin-link:focus {
+    color: #c4b5fd;
+    text-decoration: underline;
+  }
+  /* Responsive Nav Hamburger for Mobile */
+  #mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 2rem;
+    color: #4f46e5;
+  }
+  #mobile-nav {
+    display: none;
+    position: fixed;
+    top: 72px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(31, 41, 55, 0.95);
+    flex-direction: column;
+    padding: 1rem 2rem;
+    gap: 24px;
+    z-index: 2100;
+  }
+  #mobile-nav.show {
+    display: flex;
+  }
+  #mobile-nav button.close-btn {
+    align-self: flex-end;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+  }
+  #mobile-nav button.link {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+  }
+  #mobile-nav button.link:focus-visible {
+    outline: 2px solid #818cf8;
+    outline-offset: 2px;
+  }
+  /* Home Hero */
+  #home .hero {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  #home .hero h1 {
+    color: #4f46e5;
+    font-size: 3rem;
+  }
+  #home .hero p {
+    font-size: 1.3rem;
+    max-width: 600px;
+    margin: 1rem auto 2rem auto;
+    color: #334155;
+  }
+  /* Product Grid */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+    gap: 32px;
+  }
+  .product-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.07);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  .product-card:hover, .product-card:focus-within {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgb(0 0 0 / 0.12);
+  }
+  .product-card img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .product-card-content {
+    padding: 1rem 1.25rem 1.5rem 1.25rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .product-title {
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+  .product-desc {
+    flex-grow: 1;
+    color: #475569;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 3.6em;
+  }
+  .price-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .price {
+    font-weight: 700;
+    color: #4f46e5;
+    font-size: 1rem;
+  }
+  .price-discount {
+    font-size: 0.875rem;
+    color: #6b7280;
+    text-decoration: line-through;
+  }
+  .discount-badge {
+    margin-left: auto;
+    font-weight: 600;
+    background: #a78bfa;
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+  }
+  .btn-details {
+    margin-top: 1rem;
+    background-color: transparent;
+    border: 2px solid #4f46e5;
+    color: #4f46e5;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 14px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    align-self: flex-start;
+  }
+  .btn-details:hover, .btn-details:focus-visible {
+    background-color: #4f46e5;
+    color: white;
+    outline: none;
+  }
+  /* Catalogue filters */
+  .filters-container {
+    display: flex;
+    gap: 1rem 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    justify-content: center;
+  }
+  .filters-container select,
+  .filters-container input[type="search"] {
+    max-width: 240px;
+    flex: 1 1 240px;
+  }
+
+  /* Product Detail Modal */
+  #modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(30, 41, 59, 0.72);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    z-index: 3000;
+  }
+  #modal-backdrop.show {
+    display: flex;
+  }
+  #modal {
+    background: white;
+    border-radius: 24px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+  }
+  #modal-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem 1.5rem 0 1.5rem;
+  }
+  #modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #374151;
+    cursor: pointer;
+  }
+  #modal-content {
+    padding: 1rem 1.5rem 1.5rem 1.5rem;
+    flex-grow: 1;
+  }
+  #modal-image {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    margin-bottom: 1rem;
+    object-fit: contain;
+  }
+  #modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #1e293b;
+  }
+  #modal-content p {
+    margin-bottom: 1rem;
+    color: #475569;
+    white-space: pre-line;
+  }
+  #modal-content .price-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  #modal-content .price {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #4f46e5;
+  }
+  #modal-content .price-discount {
+    font-size: 1.1rem;
+    color: #6b7280;
+    text-decoration: line-through;
+  }
+  #modal-content .discount-badge {
+    background: #a78bfa;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+  }
+
+  /* Contact and About */
+  #contact, #about {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  /* Admin Panel styles */
+  #admin-panel {
+    max-width: 1200px;
+    margin: 0 auto 4rem auto;
+    padding: 1rem;
+  }
+  #admin-panel h2 {
+    text-align: center;
+    color: #4f46e5;
+    margin-bottom: 2rem;
+  }
+  #admin-controls {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .admin-section {
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 16px;
+    flex-grow: 1;
+    min-width: 300px;
+    max-height: 600px;
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+  }
+  .admin-section h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #1e293b;
+  }
+  .admin-product-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0.5rem 0;
+  }
+  .admin-product-item:last-child {
+    border-bottom: none;
+  }
+  .admin-product-title {
+    font-weight: 600;
+    color: #334155;
+    flex-grow: 1;
+  }
+  .admin-btn {
+    background: transparent;
+    border: 1.5px solid #4f46e5;
+    color: #4f46e5;
+    padding: 0.3rem 0.8rem;
+    border-radius: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .admin-btn:hover, .admin-btn:focus-visible {
+    background-color: #4f46e5;
+    color: white;
+    outline: none;
+  }
+  #admin-product-form {
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+    max-width: 480px;
+    margin: 2rem auto 0 auto;
+  }
+  #admin-product-form h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #4f46e5;
+  }
+  #admin-product-form label {
+    font-weight: 600;
+    margin-top: 1rem;
+    display: block;
+  }
+  #admin-product-form input,
+  #admin-product-form textarea,
+  #admin-product-form select {
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+  #admin-product-form textarea {
+    resize: vertical;
+  }
+  #admin-product-form button {
+    margin-top: 1.5rem;
+    width: 100%;
+  }
+
+  /* Responsive */
+  @media(max-width: 640px) {
+    nav {
+      display: none;
+    }
+    #mobile-menu-toggle {
+      display: block;
+    }
+    footer {
+      font-size: 0.8rem;
+      padding: 2rem 1rem;
+      grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo" tabindex="0">House of Saaj</div>
+  <nav aria-label="Primary navigation" role="navigation" id="desktop-nav">
+    <button class="link" aria-current="page" data-page="home">Home</button>
+    <button class="link" data-page="about">About</button>
+    <button class="link" data-page="catalogue">Catalogue</button>
+    <button class="link" data-page="contact">Contact</button>
+  </nav>
+  <button id="mobile-menu-toggle" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+  <nav id="mobile-nav" aria-label="Mobile navigation" role="navigation" aria-hidden="true">
+    <button class="close-btn" aria-label="Close menu">&times;</button>
+    <button class="link" data-page="home">Home</button>
+    <button class="link" data-page="about">About</button>
+    <button class="link" data-page="catalogue">Catalogue</button>
+    <button class="link" data-page="contact">Contact</button>
+  </nav>
+</header>
+
+<main id="main-content" tabindex="-1">
+  <!-- React app content dynamically injected -->
+</main>
+
+<footer>
+  <div>
+    <h4>House of Saaj</h4>
+    <p>Handcraft products that inspire creativity.</p>
+    <p><strong>Order on Instagram:</strong> <a href="https://instagram.com/houseofsaaj" target="_blank" rel="noopener noreferrer" aria-label="House of Saaj Instagram profile">instagram.com/houseofsaaj</a></p>
+    <a href="#" class="admin-link" data-page="admin" tabindex="0" aria-label="Access admin panel via footer link">Admin</a>
+  </div>
+  <div>
+    <h4>Navigate</h4>
+    <a href="#" data-page="home" tabindex="0">Home</a><br />
+    <a href="#" data-page="about" tabindex="0">About</a><br />
+    <a href="#" data-page="catalogue" tabindex="0">Catalogue</a><br />
+    <a href="#" data-page="contact" tabindex="0">Contact</a>
+  </div>
+  <div>
+    <h4>Contact</h4>
+    <address>
+      123 Handmade St.<br />
+      Craft City, CA 90000<br />
+      <a href="mailto:info@houseofsaaj.com">info@houseofsaaj.com</a><br />
+      <a href="tel:+1234567890">+1 (234) 567-890</a>
+    </address>
+  </div>
+  <div>
+    <h4>Follow Us</h4>
+    <p><a href="https://instagram.com/houseofsaaj" target="_blank" rel="noopener noreferrer" aria-label="Instagram link"><svg style="vertical-align:middle;" width="20" height="20" viewBox="0 0 24 24" fill="#4f46e5" xmlns="http://www.w3.org/2000/svg"><path d="M12 7.2a4.8 4.8 0 1 0 0 9.6 4.8 4.8 0 0 0 0-9.6zm0 7.8a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm5.4-8.46a1.14 1.14 0 1 1-2.28 0 1.14 1.14 0 0 1 2.28 0zm3.6 1.32A6.bb 6.bb 0 0 0 21.2 8a7.438 7.438 0 0 0-5.2-5.2c-.41-.1-1.66-.21-5.98-.21-4.48 0-5.67.09-6.11.21A7.434 7.434 0 0 0 2.8 8c-.13.44-.21 1.55-.21 5.98 0 4.5.07 5.67.21 6.13a7.5 7.5 0 0 0 5.9 5.94c.37.12 4.92.19 6.14.19 1.2 0 5.3-.07 6.14-.2a7.48 7.48 0 0 0 5.9-5.87c.12-.38.21-1.62.21-6.14 0-2.5-.17-4.38-.55-5z" /></svg> Instagram</a></p>
+  </div>
+</footer>
+
+<script>
+  // Basic SPA Routing and UI logic (Vanilla JS, easy to extend)
+  (function() {
+    const apiBase = "https://houseofsaaj.onrender.com";
+    const ADMIN_PASSWORD_PROMPT = "Please enter admin password:";
+
+    const mainContent = document.getElementById("main-content");
+    const navLinks = [...document.querySelectorAll("nav button.link"), ...document.querySelectorAll("footer a[data-page], footer a.admin-link")];
+
+    // Mobile nav
+    const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+    const mobileNav = document.getElementById("mobile-nav");
+    const mobileNavClose = mobileNav.querySelector(".close-btn");
+
+    mobileMenuToggle.addEventListener("click", () => {
+      if (mobileNav.classList.contains("show")) {
+        mobileNav.classList.remove("show");
+        mobileNav.setAttribute("aria-hidden", "true");
+        mobileMenuToggle.setAttribute("aria-expanded", "false");
+      } else {
+        mobileNav.classList.add("show");
+        mobileNav.setAttribute("aria-hidden", "false");
+        mobileMenuToggle.setAttribute("aria-expanded", "true");
+      }
+    });
+
+    mobileNavClose.addEventListener("click", () => {
+      mobileNav.classList.remove("show");
+      mobileNav.setAttribute("aria-hidden", "true");
+      mobileMenuToggle.setAttribute("aria-expanded", "false");
+    });
+
+    navLinks.forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        let page = link.dataset.page;
+        if (!page) page = link.getAttribute("href")?.replace("#", "");
+        if (page) {
+          navigateTo(page);
+          if(mobileNav.classList.contains("show")) {
+            mobileNav.classList.remove("show");
+            mobileNav.setAttribute("aria-hidden", "true");
+            mobileMenuToggle.setAttribute("aria-expanded", "false");
+          }
+        }
+      });
+    });
+
+    let adminAuthenticated = false;
+
+    async function navigateTo(page) {
+      setActiveLink(page);
+      mainContent.innerHTML = "<p>Loading...</p>";
+      mainContent.focus();
+      switch(page) {
+        case "home": await renderHome(); break;
+        case "about": await renderAbout(); break;
+        case "catalogue": await renderCatalogue(); break;
+        case "contact": await renderContact(); break;
+        case "admin": await renderAdmin(); break;
+        default: await renderHome();
+      }
+    }
+
+    function setActiveLink(page) {
+      navLinks.forEach(link => {
+        if(link.dataset.page === page || link.getAttribute("href") === "#" + page) {
+          link.setAttribute("aria-current", "page");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+    }
+
+    async function fetchJSON(url, options = {}) {
+      const res = await fetch(url, options);
+      if(!res.ok) {
+        throw new Error(`HTTP error ${res.status}`);
+      }
+      return await res.json();
+    }
+
+    async function renderHome() {
+      mainContent.innerHTML = `
+        <section id="home" tabindex="0" aria-label="Home page">
+          <div class="hero">
+            <h1>Welcome to House of Saaj</h1>
+            <p>Discover authentic handcraft products that bring beauty and soul into your home and life.</p>
+            <button data-page="catalogue">Browse Catalogue</button>
+          </div>
+          <section aria-label="Featured products">
+            <h2>Featured Products</h2>
+            <div class="product-grid" id="featured-products"></div>
+          </section>
+        </section>
+      `;
+      document.querySelector("button[data-page='catalogue']").addEventListener("click", (e) => {
+        navigateTo("catalogue");
+      });
+      try {
+        const products = await fetchJSON(`${apiBase}/products?limit=4`);
+        const container = document.getElementById("featured-products");
+        container.innerHTML = "";
+        products.forEach(product => {
+          const card = createProductCard(product);
+          container.appendChild(card);
+        });
+      } catch {
+        mainContent.querySelector("#featured-products").textContent = "Failed to load featured products.";
+      }
+    }
+
+    async function renderAbout() {
+      mainContent.innerHTML = `
+        <section id="about" tabindex="0">
+          <h1>About House of Saaj</h1>
+          <p>House of Saaj specializes in handcrafted products made with passion and dedication. Each item is created by skilled artisans using traditional techniques combined with innovative designs. We aim to inspire creativity and add warmth to your space with unique, quality products.</p>
+          <p>Our mission is to empower craftsmanship and celebrate handmade artistry by bringing beautiful pieces into the lives of our customers.</p>
+        </section>
+      `;
+    }
+
+    async function renderContact() {
+      mainContent.innerHTML = `
+        <section id="contact" tabindex="0">
+          <h1>Contact Us</h1>
+          <p>Feel free to reach out to us for inquiries or orders. We take orders mainly via Instagram or email.</p>
+          <address>
+            Instagram: <a href="https://instagram.com/houseofsaaj" target="_blank" rel="noopener">instagram.com/houseofsaaj</a><br />
+            Email: <a href="mailto:info@houseofsaaj.com">info@houseofsaaj.com</a><br />
+            Phone: <a href="tel:+1234567890">+1 (234) 567-890</a><br />
+          </address>
+        </section>
+      `;
+    }
+
+    async function renderCatalogue() {
+      mainContent.innerHTML = `
+        <section id='catalogue'>
+          <h1>Catalogue</h1>
+          <div class="filters-container" role="region" aria-label="Catalogue filters">
+            <input type="search" id="search-input" aria-label="Search products" placeholder="Search products..." />
+            <select id="category-select" aria-label="Filter by category">
+              <option value="">All Categories</option>
+            </select>
+            <select id="tag-select" aria-label="Filter by tag">
+              <option value="">All Tags</option>
+            </select>
+          </div>
+          <div class="product-grid" id="catalogue-products" tabindex="0" aria-live="polite"></div>
+        </section>
+        <div id="product-modal-backdrop" aria-hidden="true">
+          <div id="product-modal" role="dialog" aria-modal="true" aria-labelledby="product-modal-title" tabindex="-1">
+            <button id="product-modal-close" aria-label="Close product details">&times;</button>
+            <img id="product-modal-image" alt="" />
+            <h2 id="product-modal-title"></h2>
+            <p id="product-modal-description"></p>
+            <div class="price-row" aria-label="Pricing">
+              <span id="product-modal-price" class="price"></span>
+              <span id="product-modal-price-discount" class="price-discount"></span>
+              <span id="product-modal-discount-badge" class="discount-badge"></span>
+            </div>
+            <em>Orders taken via <a href="https://instagram.com/houseofsaaj" target="_blank" rel="noopener">Instagram</a>.</em>
+          </div>
+        </div>
+      `;
+
+      const categorySelect = document.getElementById("category-select");
+      const tagSelect = document.getElementById("tag-select");
+      const searchInput = document.getElementById("search-input");
+      const productsContainer = document.getElementById("catalogue-products");
+
+      // Fetch categories and tags in parallel
+      try {
+        const [categories, tags] = await Promise.all([
+          fetchJSON(`${apiBase}/categories`),
+          fetchJSON(`${apiBase}/tags`),
+        ]);
+        categories.forEach(c => {
+          const option = document.createElement("option");
+          option.value = c.id;
+          option.textContent = c.name;
+          categorySelect.appendChild(option);
+        });
+        tags.forEach(t => {
+          const option = document.createElement("option");
+          option.value = t.id;
+          option.textContent = t.name;
+          tagSelect.appendChild(option);
+        });
+      } catch {
+        // Ignore errors loading filters
+      }
+
+      // Fetch and render function
+      async function fetchAndRenderProducts() {
+        productsContainer.innerHTML = "<p>Loading...</p>";
+        try {
+          const products = await fetchJSON(`${apiBase}/products?limit=1000`);
+          // Simple in-memory filtering
+          const searchTerm = searchInput.value.toLowerCase();
+          const categoryId = categorySelect.value;
+          const tagId = tagSelect.value;
+          let filtered = products.filter(p => 
+            (!categoryId || p.category.id.toString() === categoryId) &&
+            (!tagId || p.tags.some(t => t.id.toString() === tagId)) &&
+            (p.name.toLowerCase().includes(searchTerm) || p.description.toLowerCase().includes(searchTerm))
+          );
+          if (filtered.length === 0) {
+            productsContainer.innerHTML = "<p>No products found.</p>";
+            return;
+          }
+          productsContainer.innerHTML = "";
+          filtered.forEach(product => {
+            const card = createProductCard(product);
+            productsContainer.appendChild(card);
+          });
+          addProductCardListeners();
+        } catch {
+          productsContainer.innerHTML = "<p>Error loading products.</p>";
+        }
+      }
+
+      // Update on filter/search input
+      categorySelect.addEventListener("change", fetchAndRenderProducts);
+      tagSelect.addEventListener("change", fetchAndRenderProducts);
+      searchInput.addEventListener("input", fetchAndRenderProducts);
+
+      await fetchAndRenderProducts();
+
+      // Product modal handlers
+      const modalBackdrop = document.getElementById("product-modal-backdrop");
+      const modal = document.getElementById("product-modal");
+      const modalCloseBtn = document.getElementById("product-modal-close");
+      const modalImage = document.getElementById("product-modal-image");
+      const modalTitle = document.getElementById("product-modal-title");
+      const modalDesc = document.getElementById("product-modal-description");
+      const modalPrice = document.getElementById("product-modal-price");
+      const modalPriceDiscount = document.getElementById("product-modal-price-discount");
+      const modalDiscountBadge = document.getElementById("product-modal-discount-badge");
+
+      function showModal(product) {
+        modalImage.src = product.images[0]?.url || "";
+        modalImage.alt = product.name + " image";
+        modalTitle.textContent = product.name;
+        modalDesc.textContent = product.description;
+        modalPrice.textContent = formatPrice(getDiscountedPrice(product.price, product.discount));
+        if (product.discount > 0) {
+          modalPriceDiscount.textContent = formatPrice(product.price);
+          modalPriceDiscount.style.display = "inline";
+          modalDiscountBadge.textContent = product.discount + "% off";
+          modalDiscountBadge.style.display = "inline-block";
+        } else {
+          modalPriceDiscount.style.display = "none";
+          modalDiscountBadge.style.display = "none";
+        }
+        modalBackdrop.setAttribute("aria-hidden", "false");
+        modalBackdrop.classList.add("show");
+        modal.focus();
+      }
+      function hideModal() {
+        modalBackdrop.setAttribute("aria-hidden", "true");
+        modalBackdrop.classList.remove("show");
+        modalImage.src = "";
+      }
+      modalCloseBtn.addEventListener("click", hideModal);
+      modalBackdrop.addEventListener("click", e => {
+        if (e.target === modalBackdrop) hideModal();
+      });
+      window.addEventListener("keydown", e => {
+        if ((e.key === "Escape" || e.key === "Esc") && modalBackdrop.classList.contains("show")) {
+          hideModal();
+        }
+      });
+
+      function addProductCardListeners() {
+        document.querySelectorAll(".btn-details").forEach(button => {
+          button.addEventListener("click", async (e) => {
+            const prodId = e.target.dataset.productId;
+            try {
+              const product = await fetchJSON(`${apiBase}/products/${prodId}`);
+              showModal(product);
+            } catch {
+              alert("Failed to load product data");
+            }
+          });
+        });
+      }
+
+      // Utility helpers
+      function formatPrice(val) {
+        return val.toLocaleString("en-US", { style: "currency", currency: "USD" });
+      }
+      function getDiscountedPrice(price, discount) {
+        if (!discount || discount <= 0) return price;
+        return +(price * (1 - discount / 100)).toFixed(2);
+      }
+      function createProductCard(product) {
+        const div = document.createElement("article");
+        div.className = "product-card";
+        div.tabIndex = 0;
+        div.setAttribute("aria-label", `${product.name}, price ${formatPrice(getDiscountedPrice(product.price, product.discount))}`);
+        div.innerHTML = `
+          <img src="${product.images[0]?.url || ''}" alt="${product.name} image" />
+          <div class="product-card-content">
+            <h3 class="product-title">${product.name}</h3>
+            <p class="product-desc">${product.description}</p>
+            <div class="price-row">
+              <span class="price">${formatPrice(getDiscountedPrice(product.price, product.discount))}</span>
+              ${product.discount > 0 ? `<span class="price-discount">${formatPrice(product.price)}</span><span class="discount-badge">${product.discount}% off</span>` : ''}
+            </div>
+            <button class="btn-details" data-product-id="${product.id}">View Details</button>
+          </div>
+        `;
+        return div;
+      }
+    }
+
+    async function renderAdmin() {
+      if (!adminAuthenticated) {
+        let pass = prompt(ADMIN_PASSWORD_PROMPT);
+        if (pass !== "admin123") {
+          alert("Incorrect password");
+          await navigateTo("home");
+          return;
+        }
+        adminAuthenticated = true;
+      }
+
+      mainContent.innerHTML = `
+        <section id="admin-panel" tabindex="0">
+          <h2>Admin Panel</h2>
+          <div id="admin-controls">
+            <div class="admin-section" id="admin-products-section">
+              <h3>Products</h3>
+              <button id="btn-add-product" class="btn-primary">Add New Product</button>
+              <div id="admin-product-list"></div>
+            </div>
+            <div class="admin-section" id="admin-categories-section">
+              <h3>Categories</h3>
+              <input type="text" id="new-category-input" placeholder="New category" />
+              <button id="btn-add-category" class="btn-primary">Add Category</button>
+              <ul id="admin-category-list"></ul>
+              <h3>Tags</h3>
+              <input type="text" id="new-tag-input" placeholder="New tag" />
+              <button id="btn-add-tag" class="btn-primary">Add Tag</button>
+              <ul id="admin-tag-list"></ul>
+            </div>
+          </div>
+          <form id="admin-product-form" style="margin-top:2rem; display:none;" enctype="multipart/form-data">
+            <h3 id="admin-form-title">Add / Edit Product</h3>
+            <input type="hidden" id="product-id" />
+            <label>Product Name *</label>
+            <input required type="text" id="product-name" />
+            <label>Description *</label>
+            <textarea rows="3" required id="product-description"></textarea>
+            <label>Category *</label>
+            <select required id="product-category"></select>
+            <label>Tags (comma separated)</label>
+            <input type="text" id="product-tags" />
+            <label>Price (USD) *</label>
+            <input required type="number" min="0" step="0.01" id="product-price" />
+            <label>Discount (%)</label>
+            <input type="number" min="0" max="100" step="1" value="0" id="product-discount" />
+            <label>Upload Images (You can upload multiple images)</label>
+            <input type="file" id="product-images" multiple accept="image/*" />
+            <button type="submit" class="btn-primary">Save Product</button>
+            <button type="button" id="btn-cancel-product-form" style="margin-top:10px;">Cancel</button>
+          </form>
+        </section>
+      `;
+
+      // Load categories, tags, and products
+      const [categories, tags, products] = await Promise.all([
+        fetchJSON(apiBase + "/categories"),
+        fetchJSON(apiBase + "/tags"),
+        fetchJSON(apiBase + "/products"),
+      ]);
+      const categorySelect = document.getElementById("product-category");
+      categories.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat.id;
+        option.textContent = cat.name;
+        categorySelect.appendChild(option);
+      });
+
+      const categoryList = document.getElementById("admin-category-list");
+      categoryList.innerHTML = "";
+      categories.forEach(cat => {
+        const li = document.createElement("li");
+        li.textContent = cat.name + " ";
+        const del = document.createElement("button");
+        del.textContent = "Delete";
+        del.className = "admin-btn";
+        del.onclick = () => deleteCategory(cat.id);
+        li.appendChild(del);
+        categoryList.appendChild(li);
+      });
+
+      const tagList = document.getElementById("admin-tag-list");
+      tagList.innerHTML = "";
+      tags.forEach(tag => {
+        const li = document.createElement("li");
+        li.textContent = tag.name + " ";
+        const del = document.createElement("button");
+        del.textContent = "Delete";
+        del.className = "admin-btn";
+        del.onclick = () => deleteTag(tag.id);
+        li.appendChild(del);
+        tagList.appendChild(li);
+      });
+
+      function renderProductList() {
+        const list = document.getElementById("admin-product-list");
+        list.innerHTML = "";
+        products.forEach(product => {
+          const div = document.createElement("div");
+          div.className = "admin-product-item";
+          div.innerHTML = `
+            <span class="admin-product-title">${product.name}</span>
+            <div>
+              <button class="admin-btn">Edit</button>
+              <button class="admin-btn">Delete</button>
+            </div>
+          `;
+          const editBtn = div.querySelector("button:first-of-type");
+          const delBtn = div.querySelector("button:last-of-type");
+          editBtn.onclick = () => openProductForm(product);
+          delBtn.onclick = () => deleteProduct(product.id);
+          list.appendChild(div);
+        });
+      }
+      renderProductList();
+
+      document.getElementById("btn-add-product").onclick = () => openProductForm(null);
+      document.getElementById("btn-cancel-product-form").onclick = () => closeProductForm();
+
+      document.getElementById("btn-add-category").onclick = async () => {
+        const input = document.getElementById("new-category-input");
+        const name = input.value.trim();
+        if (!name) return alert("Category name cannot be empty");
+        try {
+          await callApi(`${apiBase}/categories`, "POST", { name });
+          alert("Category added");
+          input.value = "";
+          await renderAdmin();
+        } catch(e) {
+          alert("Failed to add category");
+        }
+      };
+      document.getElementById("btn-add-tag").onclick = async () => {
+        const input = document.getElementById("new-tag-input");
+        const name = input.value.trim();
+        if (!name) return alert("Tag name cannot be empty");
+        try {
+          await callApi(`${apiBase}/tags`, "POST", { name });
+          alert("Tag added");
+          input.value = "";
+          await renderAdmin();
+        } catch(e) {
+          alert("Failed to add tag");
+        }
+      };
+
+      const productForm = document.getElementById("admin-product-form");
+      productForm.onsubmit = async (e) => {
+        e.preventDefault();
+        await submitProductForm();
+      };
+
+      async function openProductForm(product) {
+        if (product) {
+          document.getElementById("admin-form-title").textContent = "Edit Product";
+          document.getElementById("product-id").value = product.id;
+          document.getElementById("product-name").value = product.name;
+          document.getElementById("product-description").value = product.description;
+          document.getElementById("product-price").value = product.price;
+          document.getElementById("product-discount").value = product.discount || 0;
+          document.getElementById("product-category").value = product.category.id;
+          document.getElementById("product-tags").value = product.tags.map(t => t.name).join(", ");
+        } else {
+          productForm.reset();
+          document.getElementById("admin-form-title").textContent = "Add New Product";
+          document.getElementById("product-id").value = "";
+          document.getElementById("product-discount").value = "0";
+        }
+        productForm.style.display = "block";
+        productForm.scrollIntoView({ behavior: "smooth" });
+      }
+
+      function closeProductForm() {
+        productForm.style.display = "none";
+      }
+
+      async function submitProductForm() {
+        // Gather form data
+        const id = document.getElementById("product-id").value;
+        const name = document.getElementById("product-name").value.trim();
+        const description = document.getElementById("product-description").value.trim();
+        const price = parseFloat(document.getElementById("product-price").value);
+        const discount = parseInt(document.getElementById("product-discount").value) || 0;
+        const categoryId = parseInt(document.getElementById("product-category").value);
+        const tagsRaw = document.getElementById("product-tags").value.trim();
+        const tagsArray = tagsRaw ? tagsRaw.split(",").map(t => t.trim()).filter(t => t.length > 0) : [];
+        const imagesInput = document.getElementById("product-images");
+        // Validate required fields
+        if (!name || !description || isNaN(price) || isNaN(categoryId)) {
+          alert("Please fill all required fields correctly.");
+          return;
+        }
+
+        // Upload images to backend S3 upload endpoint one by one with admin password prompt
+        let imageUrls = [];
+        if (imagesInput.files.length > 0) {
+          for(let f of imagesInput.files) {
+            try {
+              const url = await uploadImage(f);
+              imageUrls.push({ url });
+            } catch {
+              alert("Failed to upload one or more images.");
+              return;
+            }
+          }
+        }
+        // Convert tag names to tag IDs by creating missing tags via backend
+        let tagIds = [];
+        if (tagsArray.length > 0) {
+          // Fetch existing tags
+          const backendTags = await fetchJSON(`${apiBase}/tags`);
+          // Map existing tag names to ids
+          let nameToId = {};
+          backendTags.forEach(t => nameToId[t.name.toLowerCase()] = t.id);
+          for (let tagName of tagsArray) {
+            let lower = tagName.toLowerCase();
+            if (!nameToId[lower]) {
+              // Create tag
+              try {
+                const newTag = await callApi(`${apiBase}/tags`, "POST", { name: tagName });
+                nameToId[lower] = newTag.id;
+              } catch {
+                alert(`Failed to create tag ${tagName}`);
+                return;
+              }
+            }
+            tagIds.push(nameToId[lower]);
+          }
+        }
+
+        // Prepare product data schema
+        const prodData = {
+          name,
+          description,
+          price,
+          discount,
+          category_id: categoryId,
+          tags: tagIds,
+          images: imageUrls,
+        };
+
+        // Prompt admin password securely
+        const adminPassword = prompt("Enter admin password to save product:");
+        if (!adminPassword) return;
+
+        try {
+          if (id) {
+            // Update existing product
+            const formData = new FormData();
+            formData.append("password", adminPassword);
+            // For PUT, FastAPI expects JSON body, so we use fetch with JSON and add password as query param or header (we simplify here by sending JSON)
+            const updated = await fetch(`${apiBase}/products/${id}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(prodData + {password: adminPassword}),
+            });
+            if (!updated.ok) throw new Error("Update failed");
+          } else {
+            // Create new product - backend requires form data password and product JSON as body. Simplify by patching backend accordingly or use workarounds.
+            // For now, post product with password in query string for demo purposes:
+            const created = await fetch(`${apiBase}/products?password=${encodeURIComponent(adminPassword)}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(prodData),
+            });
+            if (!created.ok) throw new Error("Create failed");
+          }
+          alert("Product saved successfully.");
+          await navigateTo("admin");
+        } catch {
+          alert("Failed to save product - check password and data.");
+        }
+      }
+
+      async function uploadImage(file) {
+        const adminPassword = prompt("Please enter admin password for image upload:");
+        if (!adminPassword) throw new Error("admin password required");
+        const data = new FormData();
+        data.append("file", file);
+        data.append("password", adminPassword);
+        const res = await fetch(`${apiBase}/upload-image`, {
+          method: "POST",
+          body: data,
+        });
+        if (!res.ok) throw new Error("Upload failed");
+        const json = await res.json();
+        return json.url;
+      }
+
+      async function callApi(url, method, body) {
+        const res = await fetch(url, {
+          method,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        if (!res.ok) throw new Error(res.statusText);
+        return await res.json();
+      }
+
+      async function deleteCategory(categoryId) {
+        const adminPassword = prompt("Enter admin password to delete category:");
+        if (!adminPassword) return;
+        if (!confirm("Are you sure you want to delete this category? Products using it must be updated first.")) return;
+        try {
+          const res = await fetch(`${apiBase}/categories/${categoryId}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+          });
+          if (!res.ok) throw new Error("Delete failed");
+          alert("Category deleted.");
+          await navigateTo("admin");
+        } catch {
+          alert("Failed to delete category.");
+        }
+      }
+
+      async function deleteTag(tagId) {
+        const adminPassword = prompt("Enter admin password to delete tag:");
+        if (!adminPassword) return;
+        if (!confirm("Are you sure you want to delete this tag? It will be removed from all products.")) return;
+        try {
+          const res = await fetch(`${apiBase}/tags/${tagId}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+          });
+          if (!res.ok) throw new Error("Delete failed");
+          alert("Tag deleted.");
+          await navigateTo("admin");
+        } catch {
+          alert("Failed to delete tag.");
+        }
+      }
+
+      async function deleteProduct(productId) {
+        const adminPassword = prompt("Enter admin password to delete product:");
+        if (!adminPassword) return;
+        if (!confirm("Are you sure you want to delete this product?")) return;
+        try {
+          const res = await fetch(`${apiBase}/products/${productId}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+          });
+          if (!res.ok) throw new Error("Delete failed");
+          alert("Product deleted.");
+          await navigateTo("admin");
+        } catch {
+          alert("Failed to delete product.");
+        }
+      }
+    }
+
+    // Initial navigation
+    navigateTo("home");
+
+  })();
+</script>
+</body>
+</html>
+
