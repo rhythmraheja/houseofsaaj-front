@@ -1068,11 +1068,11 @@
     if (imagesInput.files.length > 0) {
         for (let f of imagesInput.files) {
             try {
-                const url = await uploadImage(f); // Ensure uploadImage function is defined
+                const url = await uploadImage(f); // Ensure uploadImage function is defined properly
                 imageUrls.push({ url });
             } catch (error) {
                 alert("Failed to upload one or more images.");
-                console.error(error); // Log the error for debugging
+                console.error(error);
                 return;
             }
         }
@@ -1095,7 +1095,7 @@
                     nameToId[lower] = newTag.id;
                 } catch (error) {
                     alert(`Failed to create tag ${tagName}`);
-                    console.error(error); // Log the error for debugging
+                    console.error(error);
                     return;
                 }
             }
@@ -1120,14 +1120,17 @@
 
     try {
         const formData = new FormData();
-        formData.append("password", adminPassword); // Append password to FormData
+        formData.append("password", adminPassword); // Append password
 
-        // Append product data to FormData
+        // Append product data to FormData, convert arrays/objects to JSON strings
         for (const key in prodData) {
-            formData.append(key, prodData[key]);
+            if (Array.isArray(prodData[key]) || typeof prodData[key] === 'object') {
+                formData.append(key, JSON.stringify(prodData[key]));
+            } else {
+                formData.append(key, prodData[key]);
+            }
         }
-           
-   
+
         if (id) {
             // Update existing product
             const updated = await fetch(`${apiBase}/products/${id}`, {
@@ -1135,7 +1138,7 @@
                 body: formData, // Send FormData directly
             });
             if (!updated.ok) {
-                const errorText = await updated.text(); // Get error message from response
+                const errorText = await updated.text();
                 console.error("Update failed:", errorText);
                 throw new Error("Update failed");
             }
@@ -1146,7 +1149,7 @@
                 body: formData, // Send FormData directly
             });
             if (!created.ok) {
-                const errorText = await created.text(); // Get error message from response
+                const errorText = await created.text();
                 console.error("Create failed:", errorText);
                 throw new Error("Create failed");
             }
@@ -1155,9 +1158,10 @@
         await navigateTo("admin");
     } catch (error) {
         alert("Failed to save product - check password and data.");
-        console.error(error); // Log the error for debugging
+        console.error(error);
     }
 }
+
 
 
       async function uploadImage(file) {
