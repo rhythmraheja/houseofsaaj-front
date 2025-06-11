@@ -1112,36 +1112,51 @@
 
         // Prompt admin password securely
         const adminPassword = prompt("Enter admin password to save product:");
-        if (!adminPassword) return;
+if (!adminPassword) return;
 
-        try {
-          if (id) {
-            // Update existing product
-            const formData = new FormData();
-            formData.append("password", adminPassword);
-            // For PUT, FastAPI expects JSON body, so we use fetch with JSON and add password as query param or header (we simplify here by sending JSON)
-            const updated = await fetch(`${apiBase}/products/${id}`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(prodData + {password: adminPassword}),
-            });
-            if (!updated.ok) throw new Error("Update failed");
-          } else {
-            // Create new product - backend requires form data password and product JSON as body. Simplify by patching backend accordingly or use workarounds.
-            // For now, post product with password in query string for demo purposes:
-            const created = await fetch(`${apiBase}/products?password=${encodeURIComponent(adminPassword)}`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(prodData),
-            });
-            if (!created.ok) throw new Error("Create failed");
-          }
-          alert("Product saved successfully.");
-          await navigateTo("admin");
-        } catch {
-          alert("Failed to save product - check password and data.");
-        }
-      }
+try {
+  const formData = new FormData();
+  formData.append("password", adminPassword); // Append password to FormData
+
+  if (id) {
+    // Update existing product
+    // Append product data to FormData
+    for (const key in prodData) {
+      formData.append(key, prodData[key]);
+    }
+
+    const updated = await fetch(`${apiBase}/products/${id}`, {
+      method: "PUT",
+      body: formData, // Send FormData directly
+    });
+    if (!updated.ok) {
+      const errorText = await updated.text(); // Get error message from response
+      console.error("Update failed:", errorText);
+      throw new Error("Update failed");
+    }
+  } else {
+    // Create new product
+    // Append product data to FormData
+    for (const key in prodData) {
+      formData.append(key, prodData[key]);
+    }
+
+    const created = await fetch(`${apiBase}/products?password=${encodeURIComponent(adminPassword)}`, {
+      method: "POST",
+      body: formData, // Send FormData directly
+    });
+    if (!created.ok) {
+      const errorText = await created.text(); // Get error message from response
+      console.error("Create failed:", errorText);
+      throw new Error("Create failed");
+    }
+  }
+  alert("Product saved successfully.");
+  await navigateTo("admin");
+} catch (error) {
+  alert("Failed to save product - check password and data.");
+  console.error(error); // Log the error for debugging
+}
 
       async function uploadImage(file) {
         const adminPassword = prompt("Please enter admin password for image upload:");
