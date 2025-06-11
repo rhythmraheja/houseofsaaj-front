@@ -1046,116 +1046,116 @@
       }
 
       async function submitProductForm() {
-        // Gather form data
-        const id = document.getElementById("product-id").value;
-        const name = document.getElementById("product-name").value.trim();
-        const description = document.getElementById("product-description").value.trim();
-        const price = parseFloat(document.getElementById("product-price").value);
-        const discount = parseInt(document.getElementById("product-discount").value) || 0;
-        const categoryId = parseInt(document.getElementById("product-category").value);
-        const tagsRaw = document.getElementById("product-tags").value.trim();
-        const tagsArray = tagsRaw ? tagsRaw.split(",").map(t => t.trim()).filter(t => t.length > 0) : [];
-        const imagesInput = document.getElementById("product-images");
-        // Validate required fields
-        if (!name || !description || isNaN(price) || isNaN(categoryId)) {
-          alert("Please fill all required fields correctly.");
-          return;
-        }
+    // Gather form data
+    const id = document.getElementById("product-id").value;
+    const name = document.getElementById("product-name").value.trim();
+    const description = document.getElementById("product-description").value.trim();
+    const price = parseFloat(document.getElementById("product-price").value);
+    const discount = parseInt(document.getElementById("product-discount").value) || 0;
+    const categoryId = parseInt(document.getElementById("product-category").value);
+    const tagsRaw = document.getElementById("product-tags").value.trim();
+    const tagsArray = tagsRaw ? tagsRaw.split(",").map(t => t.trim()).filter(t => t.length > 0) : [];
+    const imagesInput = document.getElementById("product-images");
 
-        // Upload images to backend S3 upload endpoint one by one with admin password prompt
-        let imageUrls = [];
-        if (imagesInput.files.length > 0) {
-          for(let f of imagesInput.files) {
+    // Validate required fields
+    if (!name || !description || isNaN(price) || isNaN(categoryId)) {
+        alert("Please fill all required fields correctly.");
+        return;
+    }
+
+    // Upload images to backend S3 upload endpoint one by one with admin password prompt
+    let imageUrls = [];
+    if (imagesInput.files.length > 0) {
+        for (let f of imagesInput.files) {
             try {
-              const url = await uploadImage(f);
-              imageUrls.push({ url });
-            } catch {
-              alert("Failed to upload one or more images.");
-              return;
+                const url = await uploadImage(f); // Ensure uploadImage function is defined
+                imageUrls.push({ url });
+            } catch (error) {
+                alert("Failed to upload one or more images.");
+                console.error(error); // Log the error for debugging
+                return;
             }
-          }
         }
-        // Convert tag names to tag IDs by creating missing tags via backend
-        let tagIds = [];
-        if (tagsArray.length > 0) {
-          // Fetch existing tags
-          const backendTags = await fetchJSON(`${apiBase}/tags`);
-          // Map existing tag names to ids
-          let nameToId = {};
-          backendTags.forEach(t => nameToId[t.name.toLowerCase()] = t.id);
-          for (let tagName of tagsArray) {
+    }
+
+    // Convert tag names to tag IDs by creating missing tags via backend
+    let tagIds = [];
+    if (tagsArray.length > 0) {
+        // Fetch existing tags
+        const backendTags = await fetchJSON(`${apiBase}/tags`);
+        // Map existing tag names to ids
+        let nameToId = {};
+        backendTags.forEach(t => nameToId[t.name.toLowerCase()] = t.id);
+        for (let tagName of tagsArray) {
             let lower = tagName.toLowerCase();
             if (!nameToId[lower]) {
-              // Create tag
-              try {
-                const newTag = await callApi(`${apiBase}/tags`, "POST", { name: tagName });
-                nameToId[lower] = newTag.id;
-              } catch {
-                alert(`Failed to create tag ${tagName}`);
-                return;
-              }
+                // Create tag
+                try {
+                    const newTag = await callApi(`${apiBase}/tags`, "POST", { name: tagName });
+                    nameToId[lower] = newTag.id;
+                } catch (error) {
+                    alert(`Failed to create tag ${tagName}`);
+                    console.error(error); // Log the error for debugging
+                    return;
+                }
             }
             tagIds.push(nameToId[lower]);
-          }
+        }
+    }
+
+    // Prepare product data schema
+    const prodData = {
+        name,
+        description,
+        price,
+        discount,
+        category_id: categoryId,
+        tags: tagIds,
+        images: imageUrls,
+    };
+
+    // Prompt admin password securely
+    const adminPassword = prompt("Enter admin password to save product:");
+    if (!adminPassword) return;
+
+    try {
+        const formData = new FormData();
+        formData.append("password", adminPassword); // Append password to FormData
+
+        // Append product data to FormData
+        for (const key in prodData) {
+            formData.append(key, prodData[key]);
         }
 
-        // Prepare product data schema
-        const prodData = {
-          name,
-          description,
-          price,
-          discount,
-          category_id: categoryId,
-          tags: tagIds,
-          images: imageUrls,
-        };
-
-        // Prompt admin password securely
-        const adminPassword = prompt("Enter admin password to save product:");
-if (!adminPassword) return;
-
-try {
-  const formData = new FormData();
-  formData.append("password", adminPassword); // Append password to FormData
-
-  if (id) {
-    // Update existing product
-    // Append product data to FormData
-    for (const key in prodData) {
-      formData.append(key, prodData[key]);
+        if (id) {
+            // Update existing product
+            const updated = await fetch(`${apiBase}/products/${id}`, {
+                method: "PUT",
+                body: formData, // Send FormData directly
+            });
+            if (!updated.ok) {
+                const errorText = await updated.text(); // Get error message from response
+                console.error("Update failed:", errorText);
+                throw new Error("Update failed");
+            }
+        } else {
+            // Create new product
+            const created = await fetch(`${apiBase}/products`, {
+                method: "POST",
+                body: formData, // Send FormData directly
+            });
+            if (!created.ok) {
+                const errorText = await created.text(); // Get error message from response
+                console.error("Create failed:", errorText);
+                throw new Error("Create failed");
+            }
+        }
+        alert("Product saved successfully.");
+        await navigateTo("admin");
+    } catch (error) {
+        alert("Failed to save product - check password and data.");
+        console.error(error); // Log the error for debugging
     }
-
-    const updated = await fetch(`${apiBase}/products/${id}`, {
-      method: "PUT",
-      body: formData, // Send FormData directly
-    });
-    if (!updated.ok) {
-      const errorText = await updated.text(); // Get error message from response
-      console.error("Update failed:", errorText);
-      throw new Error("Update failed");
-    }
-  } else {
-    // Create new product
-    // Append product data to FormData
-    for (const key in prodData) {
-      formData.append(key, prodData[key]);
-    }
-
-    const created = await fetch(`${apiBase}/products?password=${encodeURIComponent(adminPassword)}`, {
-      method: "POST",
-      body: formData, // Send FormData directly
-    });
-    if (!created.ok) {
-      const errorText = await created.text(); // Get error message from response
-      console.error("Create failed:", errorText);
-      throw new Error("Create failed");
-    }
-  }
-  alert("Product saved successfully.");
-  await navigateTo("admin");
-} catch (error) {
-  alert("Failed to save product - check password and data.");
-  console.error(error); // Log the error for debugging
 }
 
 
