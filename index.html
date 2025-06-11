@@ -1067,7 +1067,7 @@
         if (imagesInput.files.length > 0) {
           for(let f of imagesInput.files) {
             try {
-              const url = await uploadImage(f);
+              const url = `${apiBase}/products?password=${encodeURIComponent(adminPassword)}`;
               imageUrls.push({ url });
             } catch {
               alert("Failed to upload one or more images.");
