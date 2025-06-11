@@ -1126,7 +1126,8 @@
         for (const key in prodData) {
             formData.append(key, prodData[key]);
         }
-
+           console.log("Product Data:", prodData);
+   
         if (id) {
             // Update existing product
             const updated = await fetch(`${apiBase}/products/${id}`, {
